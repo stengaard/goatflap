@@ -32,6 +32,9 @@ and pass the socket file descriptor to the child(ren).
 %s can run several child processes at once and they will then share the listening
 socket.
 
+%s reacts to SIGUSR1 with a reload of all running child processes. SIGINT (Ctrl-C)
+stops all child processes and exits.
+
 Parameters:
 
 `
@@ -41,7 +44,7 @@ func init() {
 
 		me := path.Base(os.Args[0])
 		// Wauv. So needy.
-		fmt.Fprintf(os.Stderr, msg, me, me, me, me, me)
+		fmt.Fprintf(os.Stderr, msg, me, me, me, me, me, me)
 		flag.PrintDefaults()
 		os.Exit(1)
 	}
