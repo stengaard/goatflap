@@ -17,9 +17,15 @@ Example:
         2017/05/12 11:55:38 2: signal: interrupt
         2017/05/12 11:55:38 all done.
 
-Note: Do not use this as loadbalancing. -c larger than 2 will give you little benefit. What this _does_ offer you is graceful reloads, not load balancing.
-
 Inspiration is from [catflap](https://github.com/passcod/catflap), but in Go. And with Goats. Goats also need to get back in.
+
+Installation
+------------
+
+        go get -u github.com/stengaard/goatflap
+
+Usage
+------
 
         Usage of goatflap
 
@@ -44,3 +50,24 @@ Inspiration is from [catflap](https://github.com/passcod/catflap), but in Go. An
                 Number of concurrent children to start (default 1)
         -net string
                 Network type to listen on (tcp or unix) (default "tcp")
+
+
+Notes
+-----
+Do not use this as loadbalancing. -c larger than 2 will give you little benefit. What this _does_ offer you is graceful reloads, not load balancing.
+
+Running `goatflap -c 10 examples/http_server` and then shooting it with [rakyll/hey](https://github.com/rakyll/hey) a few times - this is the result (`hey -n 100000 http://localhost:5000/`)
+
+        2017/05/12 12:02:29 goat proc 1 0
+        2017/05/12 12:02:29 goat proc 2 2400
+        2017/05/12 12:02:29 goat proc 3 0
+        2017/05/12 12:02:29 goat proc 4 8800
+        2017/05/12 12:02:29 goat proc 6 46400
+        2017/05/12 12:02:29 goat proc 5 600
+        2017/05/12 12:02:29 goat proc 7 2400
+        2017/05/12 12:02:29 goat proc 8 6000
+        2017/05/12 12:02:29 goat proc 9 12000
+        2017/05/12 12:02:29 goat proc 10 41400
+
+Notice the large deviation. Two child processes did more than 80% of the work and two child
+processes did not pick up a single HTTP request.
